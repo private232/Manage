@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة تحكم المشرف</title>
+    <!-- ربط خط Tajawal -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- ربط أيقونات Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* تعريف الألوان والمتغيرات */
         :root {
             --primary-color: #6C5CE7;
             --secondary-color: #A29BFE;
@@ -16,6 +19,7 @@
             --danger-color: #E74C3C;
         }
 
+        /* إعادة تعيين الأنماط الأساسية */
         * {
             margin: 0;
             padding: 0;
@@ -23,17 +27,20 @@
             font-family: 'Tajawal', sans-serif;
         }
 
+        /* أنماط الجسم والخلفية */
         body {
             background-color: var(--light-color);
             color: var(--dark-color);
         }
 
+        /* أنماط الحاوية الرئيسية */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
 
+        /* أنماط رأس الصفحة (Header) */
         header {
             background-color: var(--primary-color);
             color: white;
@@ -46,6 +53,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap; /* لجعل العناصر تتجاوب على الشاشات الصغيرة */
+            gap: 15px;
         }
 
         .logo {
@@ -55,6 +64,7 @@
         
         .header-buttons {
             display: flex;
+            flex-wrap: wrap;
             gap: 15px;
             align-items: center;
         }
@@ -83,9 +93,11 @@
             transform: translateY(-2px);
         }
 
+        /* أنماط حاوية البحث */
         .search-container {
             margin-bottom: 20px;
             display: flex;
+            flex-wrap: wrap; /* لجعل عناصر البحث تتجاوب */
             gap: 10px;
         }
         
@@ -96,8 +108,10 @@
             border: 1px solid #ddd;
             font-size: 16px;
             text-align: right;
+            min-width: 200px; /* لضمان عدم تقلص حقل البحث أكثر من اللازم */
         }
 
+        /* أنماط لوحة التحكم */
         .admin-panel {
             margin-top: 30px;
             background-color: white;
@@ -113,6 +127,8 @@
             border-bottom: 2px solid var(--secondary-color);
             padding-bottom: 10px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .panel-title {
@@ -125,6 +141,7 @@
             margin-top: 20px;
         }
 
+        /* أنماط بطاقة المستخدم */
         .user-card {
             background-color: var(--light-color);
             border-radius: 10px;
@@ -191,6 +208,7 @@
             display: flex;
             align-items: center;
             gap: 5px;
+            white-space: nowrap; /* لمنع الكلمات من الانقسام */
         }
 
         .btn-danger {
@@ -238,6 +256,7 @@
             transform: translateY(-2px);
         }
 
+        /* أنماط النوافذ المنبثقة (Modals) */
         .modal {
             display: none;
             position: fixed;
@@ -295,6 +314,7 @@
             margin-top: 20px;
         }
 
+        /* أنماط مؤشر التحميل */
         .loading {
             display: inline-block;
             width: 20px;
@@ -309,6 +329,7 @@
             to { transform: rotate(360deg); }
         }
 
+        /* أنماط رسائل التنبيه */
         .alert {
             padding: 15px;
             border-radius: 5px;
@@ -325,6 +346,7 @@
             color: #721c24;
         }
 
+        /* أنماط حالة الحساب */
         .status-active {
             color: #27AE60;
         }
@@ -332,6 +354,38 @@
         .status-disabled {
             color: #E74C3C;
         }
+
+        /* Media Queries for better mobile responsiveness */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .logo {
+                margin-bottom: 10px;
+            }
+
+            .header-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .header-btn {
+                flex: 1 1 auto;
+                justify-content: center;
+            }
+
+            .search-container {
+                flex-direction: column;
+            }
+
+            .panel-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -339,15 +393,19 @@
         <div class="container header-content">
             <div class="logo">CATALYST MANAGEMENT</div>
             <div class="header-buttons">
-                <button class="header-btn" id="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i> تسجيل خروج
-                </button>
-                <a href="add_mem.html" class="header-btn">
-                    <i class="fas fa-user-plus"></i> إضافة عضو جديد
+                <!-- إضافة زر نتائج الامتحانات هنا -->
+                <a href="exam_degrees.html" class="header-btn">
+                    <i class="fas fa-list-alt"></i> نتائج الامتحانات
                 </a>
                 <a href="add_lec.html" class="header-btn">
                     <i class="fas fa-upload"></i> رفع محاضرة
                 </a>
+                <a href="add_mem.html" class="header-btn">
+                    <i class="fas fa-user-plus"></i> إضافة عضو جديد
+                </a>
+                <button class="header-btn" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> تسجيل خروج
+                </button>
             </div>
         </div>
     </header>
@@ -372,6 +430,7 @@
         </div>
     </div>
 
+    <!-- Modals (النوافذ المنبثقة) -->
     <div class="modal" id="clear-device-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -453,6 +512,7 @@
         </div>
     </div>
 
+    <!-- ربط مكتبات Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
@@ -528,14 +588,14 @@
                         </div>
                     </div>
                     <div class="user-actions">
-<div class="year-control">
-    <select id="year-${userId}" onchange="updateUserYear('${userId}', this.value)">
-        <option value="أولى" ${userYear === 'أولى' ? 'selected' : ''}>أولى</option>
-        <option value="ثانية كيمياء" ${userYear === 'ثانية كيمياء' ? 'selected' : ''}>ثانية كيمياء</option>
-        <option value="ثانية فيزياء" ${userYear === 'ثانية فيزياء' ? 'selected' : ''}>ثانية فيزياء</option>
-        <option value="ثالثة" ${userYear === 'ثالثة' ? 'selected' : ''}>ثالثة</option>
-    </select>
-</div>
+                        <div class="year-control">
+                            <select id="year-${userId}" onchange="updateUserYear('${userId}', this.value)">
+                                <option value="أولى" ${userYear === 'أولى' ? 'selected' : ''}>أولى</option>
+                                <option value="ثانية كيمياء" ${userYear === 'ثانية كيمياء' ? 'selected' : ''}>ثانية كيمياء</option>
+                                <option value="ثانية فيزياء" ${userYear === 'ثانية فيزياء' ? 'selected' : ''}>ثانية فيزياء</option>
+                                <option value="ثالثة" ${userYear === 'ثالثة' ? 'selected' : ''}>ثالثة</option>
+                            </select>
+                        </div>
                         <button class="btn btn-warning toggle-status-btn" data-user-id="${userId}" data-current-status="${isDisabled}">
                             <i class="fas ${isDisabled ? 'fa-unlock' : 'fa-lock'}"></i> ${isDisabled ? 'تفعيل' : 'تعطيل'}
                         </button>
@@ -816,5 +876,4 @@
         });
     </script>
 </body>
-
 </html>
