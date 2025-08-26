@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة تحكم المشرف</title>
-    <!-- ربط خط Tajawal -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- ربط أيقونات Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* تعريف الألوان والمتغيرات */
@@ -25,6 +23,10 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Tajawal', sans-serif;
+            -webkit-user-select: none;  /* Safari */
+            -moz-user-select: none;     /* Firefox */
+            -ms-user-select: none;      /* Internet Explorer/Edge */
+            user-select: none;          /* Standard */
         }
 
         /* أنماط الجسم والخلفية */
@@ -177,27 +179,6 @@
             align-items: center;
         }
         
-        .year-control select {
-            padding: 8px 15px;
-            border-radius: 5px;
-            border: 1px solid var(--primary-color);
-            background-color: white;
-            color: var(--primary-color);
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .year-control select:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .year-control select:focus {
-            outline: none;
-            box-shadow: 0 0 0 2px var(--secondary-color);
-        }
-
         .btn {
             padding: 8px 15px;
             border: none;
@@ -354,6 +335,13 @@
         .status-disabled {
             color: #E74C3C;
         }
+        
+        .year-display {
+            padding: 8px 15px;
+            background-color: #ddd;
+            border-radius: 5px;
+            font-weight: 500;
+        }
 
         /* Media Queries for better mobile responsiveness */
         @media (max-width: 768px) {
@@ -393,7 +381,6 @@
         <div class="container header-content">
             <div class="logo">CATALYST MANAGEMENT</div>
             <div class="header-buttons">
-                <!-- إضافة زر نتائج الامتحانات هنا -->
                 <a href="exam_degrees.html" class="header-btn">
                     <i class="fas fa-list-alt"></i> نتائج الامتحانات
                 </a>
@@ -430,7 +417,6 @@
         </div>
     </div>
 
-    <!-- Modals (النوافذ المنبثقة) -->
     <div class="modal" id="clear-device-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -512,13 +498,20 @@
         </div>
     </div>
 
-    <!-- ربط مكتبات Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-functions-compat.js"></script>
 
     <script>
+        // منع فتح فحص العنصر
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.onkeydown = function(e) {
+            if (e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.shiftKey && e.key === 'C') || (e.ctrlKey && e.shiftKey && e.key === 'J')) {
+                return false;
+            }
+        };
+
         // تهيئة Firebase
         const firebaseConfig = {
             apiKey: 'AIzaSyBpwRyAO9Hd0y06AFxQP2VJqiwucD02kHE',
@@ -582,20 +575,15 @@
                         <div class="user-detail">كلمة السر: ${password}</div>
                         <div class="user-detail">معرف الجهاز: ${deviceId}</div>
                         <div class="user-detail">
+                            السنة الدراسية: <span class="year-display">${userYear}</span>
+                        </div>
+                        <div class="user-detail">
                             الحالة: <span class="status-${isDisabled ? 'disabled' : 'active'}">
                                 ${isDisabled ? 'معطل' : 'نشط'}
                             </span>
                         </div>
                     </div>
                     <div class="user-actions">
-                        <div class="year-control">
-                            <select id="year-${userId}" onchange="updateUserYear('${userId}', this.value)">
-                                <option value="أولى" ${userYear === 'أولى' ? 'selected' : ''}>أولى</option>
-                                <option value="ثانية كيمياء" ${userYear === 'ثانية كيمياء' ? 'selected' : ''}>ثانية كيمياء</option>
-                                <option value="ثانية فيزياء" ${userYear === 'ثانية فيزياء' ? 'selected' : ''}>ثانية فيزياء</option>
-                                <option value="ثالثة" ${userYear === 'ثالثة' ? 'selected' : ''}>ثالثة</option>
-                            </select>
-                        </div>
                         <button class="btn btn-warning toggle-status-btn" data-user-id="${userId}" data-current-status="${isDisabled}">
                             <i class="fas ${isDisabled ? 'fa-unlock' : 'fa-lock'}"></i> ${isDisabled ? 'تفعيل' : 'تعطيل'}
                         </button>
@@ -636,25 +624,11 @@
             const filteredUsers = {};
             for (const userId in allUsersData) {
                 const user = allUsersData[userId];
-                if (user.email && user.email.toLowerCase().includes(searchTerm)) {
+                if ((user.email && user.email.toLowerCase().includes(searchTerm)) || (user.year && user.year.toLowerCase().includes(searchTerm))) {
                     filteredUsers[userId] = user;
                 }
             }
             displayUsers(filteredUsers);
-        }
-
-        // وظيفة جديدة لتحديث السنة الدراسية
-        async function updateUserYear(userId, newYear) {
-            try {
-                await database.ref(`users/${userId}`).update({
-                    year: newYear
-                });
-                showAlert('تم تحديث السنة الدراسية بنجاح.', 'success');
-                loadUsers();
-            } catch (error) {
-                console.error('Error updating user year:', error);
-                showAlert('حدث خطأ أثناء تحديث السنة الدراسية', 'danger');
-            }
         }
 
         // فتح نافذة مسح الجهاز
